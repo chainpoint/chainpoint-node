@@ -21,6 +21,15 @@ services:
     image: gcr.io/chainpoint-registry/github_chainpoint_chainpoint-gateway:${DOCKER_TAG:-latest}
     user: ${USERID}:${GROUPID}
     build: .
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.role==manager]
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 15
+        window: 90s
     depends_on:
       - lnd
     ports:
@@ -50,6 +59,8 @@ services:
       CHANNEL_AMOUNT: ${CHANNEL_AMOUNT}
       FUND_AMOUNT: ${FUND_AMOUNT}
       NO_LSAT_CORE_WHITELIST: ${NO_LSAT_CORE_WHITELIST}
+      GOOGLE_UA_ID: ${GOOGLE_UA_ID}
+      PUBLIC_IP: ${LND_PUBLIC_IP}
     tty: true
     logging:
       driver: 'json-file'
@@ -105,18 +116,3 @@ services:
         max-size: '1g'
         max-file: '5'
 
-  # ln-accounting
-  # Returns accounting reports in harmony format for lnd node
-  ln-accounting:
-    image: tierion/ln-accounting
-    ports:
-      - '9000'
-    environment:
-      NETWORK: ${NETWORK}
-      LND_DIR: /root/.lnd
-      LND_SOCKET: ${LND_SOCKET}
-      ACCOUNTING_PORT: ${ACCOUNTING_PORT:-9000}
-    volumes:
-      - ~/.chainpoint/gateway/.lnd:/root/.lnd:ro
-    networks:
-      - chainpoint-gateway

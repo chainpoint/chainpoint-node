@@ -38,6 +38,9 @@ services:
       NODE_ENV: ${NODE_ENV}
       CHANNEL_AMOUNT: ${CHANNEL_AMOUNT}
       FUND_AMOUNT: ${FUND_AMOUNT}
+      NO_LSAT_CORE_WHITELIST: ${NO_LSAT_CORE_WHITELIST}
+      GOOGLE_UA_ID: ''
+      PUBLIC_IP: ${LND_PUBLIC_IP}
     tty: true
 
   # Lightning node

@@ -1,7 +1,7 @@
 # Node.js 8.x LTS on Debian Stretch Linux
 # see: https://github.com/nodejs/LTS
 # see: https://hub.docker.com/_/node/
-FROM node:12.4.0-stretch
+FROM node:12.14.1-stretch
 
 LABEL MAINTAINER="Jacob Henderson <jacob@tierion.com>"
 
@@ -12,6 +12,7 @@ RUN mkdir /home/node/app
 WORKDIR /home/node/app
 
 COPY package.json yarn.lock server.js /home/node/app/
+RUN yarn policies set-version 1.22.10
 RUN yarn
 
 RUN mkdir -p /home/node/app/scripts
